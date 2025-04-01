@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Virtual DJ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #121212;
+            --primary-darker: #0a0a0a;
+            --accent-blue: #0066ff;
+            --accent-purple: #9900ff;
+            --text-light: #f5f5f5;
+            --text-dim: #b0b0b0;
+            --deck-a: #0066ff;
+            --deck-b: #9900ff;
+            --gradient-dark: linear-gradient(135deg, rgba(25,25,25,1) 0%, rgba(15,15,15,1) 100%);
+            --gradient-light: linear-gradient(135deg, rgba(40,40,40,1) 0%, rgba(30,30,30,1) 100%);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 10% 20%, rgba(25,25,40,1) 0%, rgba(10,10,15,1) 90%);
+        }
+        
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 25px 0;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            background: linear-gradient(to right, var(--deck-a), var(--deck-b));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, var(--deck-a), var(--deck-b));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-top: 5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .url-input-section {
+            background: var(--gradient-dark);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .url-input-container {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .url-input-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .url-input-header h3 {
+            font-size: 1.3rem;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        
+        .url-input-header i {
+            font-size: 1.5rem;
+        }
+        
+        .deck-a-color {
+            color: var(--deck-a);
+        }
+        
+        .deck-b-color {
+            color: var(--deck-b);
+        }
+        
+        .url-input-group {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        .url-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.07);
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .url-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+        
+        .load-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .load-button i {
+            margin-right: 10px;
+        }
+        
+        .load-button-a {
+            background: linear-gradient(45deg, var(--deck-a), #1a75ff);
+            color: white;
+        }
+        
+        .load-button-a:hover {
+            background: linear-gradient(45deg, #0052cc, #0066ff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
+        }
+        
+        .load-button-b {
+            background: linear-gradient(45deg, var(--deck-b), #ad33ff);
+            color: white;
+        }
+        
+        .load-button-b:hover {
+            background: linear-gradient(45deg, #7700cc, #9900ff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(153, 0, 255, 0.3);
+        }
+        
+        .dj-decks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .deck {
+            flex: 1;
+            min-width: 330px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .deck:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .deck-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: var(--gradient-dark);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .deck-title {
+            display: flex;
+            align-items: center;
+        }
+        
+        .deck-title h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-left: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .deck-title i {
+            font-size: 1.8rem;
+        }
+        
+        .vinyl-container {
+            background: var(--gradient-light);
+            height: 300px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .vinyl-disk {
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, #2a2a2a 0%, #0f0f0f 80%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .vinyl-disk::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            background: repeating-radial-gradient(
+                circle at center,
+                rgba(40, 40, 40, 0.4) 0px,
+                rgba(30, 30, 30, 0.6) 1px,
+                rgba(30, 30, 30, 0) 2px,
+                rgba(30, 30, 30, 0) 5px
+            );
+            z-index: 1;
+        }
+        
+        .vinyl-disk::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25%;
+            height: 25%;
+            border-radius: 50%;
+            background: #0a0a0a;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            z-index: 2;
+        }
+        
+        .vinyl-disk.playing {
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .vinyl-reflection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0) 50%,
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            border-radius: 50%;
+            z-index: 3;
+        }
+        
+        .vinyl-arm {
+            position: absolute;
+            top: 30%;
+            right: 15%;
+            width: 100px;
+            height: 15px;
+            background: #1a1a1a;
+            transform-origin: right center;
+            transform: rotate(-20deg);
+            transition: transform 0.5s;
+            z-index: 10;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .vinyl-arm::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: -5px;
+            width: 15px;
+            height: 15px;
+            background: #2a2a2a;
+            border-radius: 50%;
+            border: 2px solid #1a1a1a;
+        }
+        
+        .vinyl-arm.playing {
+            transform: rotate(10deg);
+        }
+        
+        .track-info-container {
+            padding: 20px;
+            background: var(--gradient-dark);
+        }
+        
+        .track-info {
+            background-color: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .track-info p {
+            margin: 5px 0;
+            word-break: break-all;
+            color: var(--text-dim);
+        }
+        
+        .track-info p strong {
+            color: var(--text-light);
+            margin-right: 5px;
+        }
+        
+        .waveform-container {
+            width: 100%;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .deck-a .waveform-container {
+            box-shadow: 0 0 10px rgba(0, 102, 255, 0.2);
+        }
+        
+        .deck-b .waveform-container {
+            box-shadow: 0 0 10px rgba(153, 0, 255, 0.2);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .control-button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+        }
+        
+        .control-button i {
+            font-size: 1.2rem;
+        }
+        
+        .deck-a .control-button:hover {
+            background-color: var(--deck-a);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
+        }
+        
+        .deck-b .control-button:hover {
+            background-color: var(--deck-b);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(153, 0, 255, 0.3);
+        }
+        
+        .deck-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .slider-group {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .slider-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: var(--text-dim);
+        }
+        
+        .slider-label i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+        
+        .deck-a .slider-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80%;
+            height: 100%;
+            background: linear-gradient(to right, #0052cc, var(--deck-a));
+            border-radius: 5px;
+            transition: width 0.2s;
+        }
+        
+        .deck-b .slider-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80%;
+            height: 100%;
+            background: linear-gradient(to right, #7700cc, var(--deck-b));
+            border-radius: 5px;
+            transition: width 0.2s;
+        }
+        
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 10px;
+            background: transparent;
+            outline: none;
+            margin: 0;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mixer-section {
+            background: var(--gradient-dark);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            margin-bottom: 40px;
+        }
+        
+        .mixer-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .mixer-header h2 {
+            font-size: 1.8rem;
+            margin-left: 15px;
+            background: linear-gradient(to right, var(--deck-a), var(--deck-b));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .mixer-header i {
+            font-size: 1.8rem;
+            background: linear-gradient(to right, var(--deck-a), var(--deck-b));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .crossfade-container {
+            margin-bottom: 30px;
+        }
+        
+        .crossfade-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .crossfade-label span:first-child {
+            color: var(--deck-a);
+        }
+        
+        .crossfade-label span:last-child {
+            color: var(--deck-b);
+        }
+        
+        .crossfade-slider-container {
+            height: 15px;
+            background: linear-gradient(to right, var(--deck-a), var(--deck-b));
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .crossfade-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 15px;
+            background: transparent;
+            outline: none;
+            margin: 0;
+        }
+        
+        .crossfade-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .effects-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .effect-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .effect-button i {
+            margin-right: 8px;
+        }
+        
+        .effect-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .effect-button.active {
+            background: linear-gradient(to right, var(--deck-a), var(--deck-b));
+            box-shadow: 0 5px 15px rgba(113, 33, 255, 0.3);
+        }
+        
+        .reset-button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.07);
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .reset-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .equalizer-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .eq-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+        }
+        
+        .eq-slider {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .eq-slider input {
+            -webkit-appearance: none;
+            width: 120px;
+            height: 10px;
+            background: linear-gradient(to bottom, var(--deck-a), var(--deck-b));
+            outline: none;
+            transform: rotate(-90deg);
+            border-radius: 5px;
+        }
+        
+        .eq-slider input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .eq-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .copyright {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            .dj-decks {
+                flex-direction: column;
+            }
+            
+            .url-input-section {
+                flex-direction: column;
+            }
+            
+            .deck-controls {
+                flex-direction: column;
+            }
+            
+            .equalizer-section {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-record-vinyl"></i>
+                <h1>Virtual DJ Pro</h1>
+            </div>
+            <p class="subtitle">Professional Mixing Studio</p>
+        </header>
+        
+        <div class="main-content">
+            <section class="url-input-section">
+                <div class="url-input-container">
+                    <div class="url-input-header">
+                        <i class="fas fa-music deck-a-color"></i>
+                        <h3>Deck A Track URL</h3>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+        
+        <footer>
+            <p>Professional Virtual DJ - Mix your music with style!</p>
+            <p class="copyright">© 2025 Virtual DJ Pro. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Audio Context and Analysis
+        let audioContext;
+        let analyserA, analyserB;
+        
+        // Audio elements
+        const audioA = new Audio();
+        const audioB = new Audio();
+        
+        // Track information
+        let trackInfoA = { title: 'No track loaded', url: '', duration: '' };
+        let trackInfoB = { title: 'No track loaded', url: '', duration: '' };
+        
+        // Playback states
+        let isPlayingA = false;
+        let isPlayingB = false;
+        let isLoopA = false;
+        let isLoopB = false;
+        
+        // Audio nodes
+        let sourceA, sourceB;
+        let gainA, gainB;
+        let speedA = 1.0, speedB = 1.0;
+        
+        // Effects nodes
+        let reverbA, reverbB;
+        let delayA, delayB;
+        let filterA, filterB;
+        let flangerA, flangerB;
+        let distortionA, distortionB;
+        
+        // Effect states
+        let reverbActive = false;
+        let echoActive = false;
+        let lowpassActive = false;
+        let highpassActive = false;
+        let flangerActive = false;
+        let distortionActive = false;
+        
+        // Animation frame IDs
+        let animationFrameA;
+        let animationFrameB;
+        
+        // DOM Elements - Deck A
+        const urlInputA = document.getElementById('url-a');
+        const loadButtonA = document.getElementById('load-a');
+        const trackInfoElementA = document.getElementById('track-info-a');
+        const playButtonA = document.getElementById('play-a');
+        const pauseButtonA = document.getElementById('pause-a');
+        const stopButtonA = document.getElementById('stop-a');
+        const loopButtonA = document.getElementById('loop-a');
+        const volumeSliderA = document.getElementById('volume-a');
+        const speedSliderA = document.getElementById('speed-a');
+        const vinylA = document.getElementById('vinyl-a');
+        const armA = document.getElementById('arm-a');
+        const waveformCanvasA = document.getElementById('waveform-a');
+        
+        // DOM Elements - Deck B
+        const urlInputB = document.getElementById('url-b');
+        const loadButtonB = document.getElementById('load-b');
+        const trackInfoElementB = document.getElementById('track-info-b');
+        const playButtonB = document.getElementById('play-b');
+        const pauseButtonB = document.getElementById('pause-b');
+        const stopButtonB = document.getElementById('stop-b');
+        const loopButtonB = document.getElementById('loop-b');
+        const volumeSliderB = document.getElementById('volume-b');
+        const speedSliderB = document.getElementById('speed-b');
+        const vinylB = document.getElementById('vinyl-b');
+        const armB = document.getElementById('arm-b');
+        const waveformCanvasB = document.getElementById('waveform-b');
+        
+        // DOM Elements - Mixer
+        const crossfaderSlider = document.getElementById('crossfader');
+        
+        // DOM Elements - Effects
+        const reverbButton = document.getElementById('effect-reverb');
+        const echoButton = document.getElementById('effect-echo');
+        const lowpassButton = document.getElementById('effect-lowpass');
+        const highpassButton = document.getElementById('effect-highpass');
+        const flangerButton = document.getElementById('effect-flanger');
+        const distortionButton = document.getElementById('effect-distortion');
+        const resetEffectsButton = document.getElementById('reset-effects');
+        
+        // DOM Elements - EQ
+        const eqLow = document.getElementById('eq-low');
+        const eqMidLow = document.getElementById('eq-mid-low');
+        const eqMid = document.getElementById('eq-mid');
+        const eqMidHigh = document.getElementById('eq-mid-high');
+        const eqHigh = document.getElementById('eq-high');
+        
+        // Initialize audio context
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create analyzer nodes
+                analyserA = audioContext.createAnalyser();
+                analyserB = audioContext.createAnalyser();
+                analyserA.fftSize = 256;
+                analyserB.fftSize = 256;
+                
+                // Set up gain nodes
+                gainA = audioContext.createGain();
+                gainB = audioContext.createGain();
+                
+                // Connect basic audio graph
+                gainA.connect(audioContext.destination);
+                gainB.connect(audioContext.destination);
+                
+                // Connect analyzers
+                gainA.connect(analyserA);
+                gainB.connect(analyserB);
+                
+                // Set initial volumes
+                gainA.gain.value = volumeSliderA.value / 100;
+                gainB.gain.value = volumeSliderB.value / 100;
+                
+                // Apply crossfader
+                applyCrossfader();
+            }
+        }
+        
+        // Load track to deck A
+        loadButtonA.addEventListener('click', () => {
+            const url = urlInputA.value.trim();
+            if (url) {
+                loadTrack(url, 'a');
+            }
+        });
+        
+        // Load track to deck B
+        loadButtonB.addEventListener('click', () => {
+            const url = urlInputB.value.trim();
+            if (url) {
+                loadTrack(url, 'b');
+            }
+        });
+        
+        // Load a track to a deck
+        function loadTrack(url, deck) {
+            initAudio();
+            
+            const audio = deck === 'a' ? audioA : audioB;
+            const trackInfo = deck === 'a' ? trackInfoA : trackInfoB;
+            const trackInfoElement = deck === 'a' ? trackInfoElementA : trackInfoElementB;
+            
+            // Stop current playback if any
+            if (deck === 'a' && isPlayingA) {
+                pauseTrack('a');
+            } else if (deck === 'b' && isPlayingB) {
+                pauseTrack('b');
+            }
+            
+            // Update track info
+            trackInfo.url = url;
+            trackInfo.title = 'Loading...';
+            trackInfo.duration = '';
+            updateTrackInfo(deck);
+            
+            // Set audio source
+            audio.src = url;
+            audio.crossOrigin = 'anonymous'; // Enable CORS
+            audio.loop = deck === 'a' ? isLoopA : isLoopB;
+            
+            // Update UI when metadata is loaded
+            audio.onloadedmetadata = () => {
+                trackInfo.title = getFilenameFromUrl(url);
+                trackInfo.duration = formatTime(audio.duration);
+                updateTrackInfo(deck);
+                
+                // Create waveform visualization
+                drawWaveform(deck);
+            };
+            
+            // Handle errors
+            audio.onerror = (e) => {
+                console.error('Error loading audio:', e);
+                trackInfo.title = 'Error loading track';
+                updateTrackInfo(deck);
+            };
+            
+            // Preload audio
+            audio.load();
+        }
+        
+        // Update track info display
+        function updateTrackInfo(deck) {
+            const trackInfo = deck === 'a' ? trackInfoA : trackInfoB;
+            const trackInfoElement = deck === 'a' ? trackInfoElementA : trackInfoElementB;
+            
+            trackInfoElement.innerHTML = `
+                <p><strong>Title:</strong> ${trackInfo.title}</p>
+                ${trackInfo.duration ? `<p><strong>Duration:</strong> ${trackInfo.duration}</p>` : ''}
+                <p><strong>Status:</strong> ${deck === 'a' ? (isPlayingA ? 'Playing' : 'Paused') : (isPlayingB ? 'Playing' : 'Paused')}</p>
+            `;
+        }
+        
+        // Format time in seconds to MM:SS format
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Get filename from URL
+        function getFilenameFromUrl(url) {
+            try {
+                const parsedUrl = new URL(url);
+                const pathname = parsedUrl.pathname;
+                let filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+                
+                // Remove file extension if present
+                const extIndex = filename.lastIndexOf('.');
+                if (extIndex > 0) {
+                    filename = filename.substring(0, extIndex);
+                }
+                
+                // Replace underscores and hyphens with spaces
+                filename = filename.replace(/_/g, ' ').replace(/-/g, ' ');
+                
+                return filename || 'Unknown Track';
+            } catch (e) {
+                return 'Unknown Track';
+            }
+        }
+        
+        // Play track
+        playButtonA.addEventListener('click', () => playTrack('a'));
+        playButtonB.addEventListener('click', () => playTrack('b'));
+        
+        function playTrack(deck) {
+            initAudio();
+            
+            const audio = deck === 'a' ? audioA : audioB;
+            const vinyl = deck === 'a' ? vinylA : vinylB;
+            const arm = deck === 'a' ? armA : armB;
+            
+            // Create media element source if needed
+            if (deck === 'a' && (!sourceA || sourceA.mediaElement !== audio)) {
+                if (sourceA) {
+                    sourceA.disconnect();
+                }
+                sourceA = audioContext.createMediaElementSource(audio);
+                sourceA.connect(gainA);
+            } else if (deck === 'b' && (!sourceB || sourceB.mediaElement !== audio)) {
+                if (sourceB) {
+                    sourceB.disconnect();
+                }
+                sourceB = audioContext.createMediaElementSource(audio);
+                sourceB.connect(gainB);
+            }
+            
+            // Set playback rate
+            audio.playbackRate = deck === 'a' ? speedA : speedB;
+            
+            // Play audio
+            audio.play().then(() => {
+                // Update state
+                if (deck === 'a') {
+                    isPlayingA = true;
+                } else {
+                    isPlayingB = true;
+                }
+                
+                // Update vinyl animation
+                vinyl.classList.add('playing');
+                arm.classList.add('playing');
+                
+                // Update track info
+                updateTrackInfo(deck);
+                
+                // Start visualizer
+                updateVisualizer(deck);
+            }).catch(e => {
+                console.error('Error playing audio:', e);
+            });
+        }
+        
+        // Pause track
+        pauseButtonA.addEventListener('click', () => pauseTrack('a'));
+        pauseButtonB.addEventListener('click', () => pauseTrack('b'));
+        
+        function pauseTrack(deck) {
+            const audio = deck === 'a' ? audioA : audioB;
+            const vinyl = deck === 'a' ? vinylA : vinylB;
+            const arm = deck === 'a' ? armA : armB;
+            
+            audio.pause();
+            
+            // Update state
+            if (deck === 'a') {
+                isPlayingA = false;
+                cancelAnimationFrame(animationFrameA);
+            } else {
+                isPlayingB = false;
+                cancelAnimationFrame(animationFrameB);
+            }
+            
+            // Update vinyl animation
+            vinyl.classList.remove('playing');
+            arm.classList.remove('playing');
+            
+            // Update track info
+            updateTrackInfo(deck);
+        }
+        
+        // Stop track
+        stopButtonA.addEventListener('click', () => stopTrack('a'));
+        stopButtonB.addEventListener('click', () => stopTrack('b'));
+        
+        function stopTrack(deck) {
+            const audio = deck === 'a' ? audioA : audioB;
+            
+            pauseTrack(deck);
+            audio.currentTime = 0;
+        }
+        
+        // Toggle loop
+        loopButtonA.addEventListener('click', () => toggleLoop('a'));
+        loopButtonB.addEventListener('click', () => toggleLoop('b'));
+        
+        function toggleLoop(deck) {
+            const button = deck === 'a' ? loopButtonA : loopButtonB;
+            const audio = deck === 'a' ? audioA : audioB;
+            
+            if (deck === 'a') {
+                isLoopA = !isLoopA;
+                audio.loop = isLoopA;
+            } else {
+                isLoopB = !isLoopB;
+                audio.loop = isLoopB;
+            }
+            
+            // Update button style
+            if ((deck === 'a' && isLoopA) || (deck === 'b' && isLoopB)) {
+                button.style.backgroundColor = deck === 'a' ? 'var(--deck-a)' : 'var(--deck-b)';
+                button.style.color = 'white';
+            } else {
+                button.style.backgroundColor = '';
+                button.style.color = '';
+            }
+        }
+        
+        // Volume control
+        volumeSliderA.addEventListener('input', () => {
+            if (gainA) {
+                gainA.gain.value = volumeSliderA.value / 100;
+                applyCrossfader();
+            }
+        });
+        
+        volumeSliderB.addEventListener('input', () => {
+            if (gainB) {
+                gainB.gain.value = volumeSliderB.value / 100;
+                applyCrossfader();
+            }
+        });
+        
+        // Speed control
+        speedSliderA.addEventListener('input', () => {
+            speedA = speedSliderA.value / 100;
+            if (audioA) {
+                audioA.playbackRate = speedA;
+            }
+        });
+        
+        speedSliderB.addEventListener('input', () => {
+            speedB = speedSliderB.value / 100;
+            if (audioB) {
+                audioB.playbackRate = speedB;
+            }
+        });
+        
+        // Crossfader
+        crossfaderSlider.addEventListener('input', applyCrossfader);
+        
+        function applyCrossfader() {
+            if (!gainA || !gainB) return;
+            
+            const value = crossfaderSlider.value / 100;
+            
+            // Equal power crossfade
+            const gainValueA = Math.cos(value * 0.5 * Math.PI);
+            const gainValueB = Math.cos((1.0 - value) * 0.5 * Math.PI);
+            
+            // Apply volume adjustment from sliders
+            const volumeA = volumeSliderA.value / 100;
+            const volumeB = volumeSliderB.value / 100;
+            
+            gainA.gain.value = gainValueA * volumeA;
+            gainB.gain.value = gainValueB * volumeB;
+        }
+        
+        // Effects
+        reverbButton.addEventListener('click', () => toggleEffect('reverb'));
+        echoButton.addEventListener('click', () => toggleEffect('echo'));
+        lowpassButton.addEventListener('click', () => toggleEffect('lowpass'));
+        highpassButton.addEventListener('click', () => toggleEffect('highpass'));
+        flangerButton.addEventListener('click', () => toggleEffect('flanger'));
+        distortionButton.addEventListener('click', () => toggleEffect('distortion'));
+        resetEffectsButton.addEventListener('click', resetEffects);
+        
+        function toggleEffect(effectType) {
+            initAudio();
+            
+            switch (effectType) {
+                case 'reverb':
+                    reverbActive = !reverbActive;
+                    reverbButton.classList.toggle('active', reverbActive);
+                    break;
+                case 'echo':
+                    echoActive = !echoActive;
+                    echoButton.classList.toggle('active', echoActive);
+                    break;
+                case 'lowpass':
+                    lowpassActive = !lowpassActive;
+                    highpassActive = false;
+                    lowpassButton.classList.toggle('active', lowpassActive);
+                    highpassButton.classList.remove('active');
+                    break;
+                case 'highpass':
+                    highpassActive = !highpassActive;
+                    lowpassActive = false;
+                    highpassButton.classList.toggle('active', highpassActive);
+                    lowpassButton.classList.remove('active');
+                    break;
+                case 'flanger':
+                    flangerActive = !flangerActive;
+                    flangerButton.classList.toggle('active', flangerActive);
+                    break;
+                case 'distortion':
+                    distortionActive = !distortionActive;
+                    distortionButton.classList.toggle('active', distortionActive);
+                    break;
+            }
+            
+            applyEffects();
+        }
+        
+        function applyEffects() {
+            // In a full implementation, this would connect/disconnect audio effect nodes
+            console.log('Applied effects:');
+            console.log('- Reverb:', reverbActive ? 'ON' : 'OFF');
+            console.log('- Echo:', echoActive ? 'ON' : 'OFF');
+            console.log('- Low Pass:', lowpassActive ? 'ON' : 'OFF');
+            console.log('- High Pass:', highpassActive ? 'ON' : 'OFF');
+            console.log('- Flanger:', flangerActive ? 'ON' : 'OFF');
+            console.log('- Distortion:', distortionActive ? 'ON' : 'OFF');
+        }
+        
+        function resetEffects() {
+            reverbActive = false;
+            echoActive = false;
+            lowpassActive = false;
+            highpassActive = false;
+            flangerActive = false;
+            distortionActive = false;
+            
+            // Update button states
+            reverbButton.classList.remove('active');
+            echoButton.classList.remove('active');
+            lowpassButton.classList.remove('active');
+            highpassButton.classList.remove('active');
+            flangerButton.classList.remove('active');
+            distortionButton.classList.remove('active');
+            
+            applyEffects();
+        }
+        
+        // EQ Controls
+        eqLow.addEventListener('input', updateEQ);
+        eqMidLow.addEventListener('input', updateEQ);
+        eqMid.addEventListener('input', updateEQ);
+        eqMidHigh.addEventListener('input', updateEQ);
+        eqHigh.addEventListener('input', updateEQ);
+        
+        function updateEQ() {
+            // In a full implementation, this would adjust EQ filter nodes
+            console.log('EQ Settings:');
+            console.log('- Low:', eqLow.value);
+            console.log('- Mid-Low:', eqMidLow.value);
+            console.log('- Mid:', eqMid.value);
+            console.log('- Mid-High:', eqMidHigh.value);
+            console.log('- High:', eqHigh.value);
+        }
+        
+        // Draw waveform
+        function drawWaveform(deck) {
+            const canvas = deck === 'a' ? waveformCanvasA : waveformCanvasB;
+            const ctx = canvas.getContext('2d');
+            const audio = deck === 'a' ? audioA : audioB;
+            const color = deck === 'a' ? 'var(--deck-a)' : 'var(--deck-b)';
+            
+            // Reset canvas dimensions
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Generate waveform data (simplified for demo)
+            const barCount = 80;
+            const barWidth = canvas.width / barCount;
+            const barGap = 1;
+            
+            // Draw bars
+            ctx.fillStyle = color;
+            for (let i = 0; i < barCount; i++) {
+                // Generate random heights for visualization
+                const height = Math.random() * canvas.height * 0.8;
+                const x = i * (barWidth + barGap);
+                const y = (canvas.height - height) / 2;
+                
+                ctx.fillRect(x, y, barWidth, height);
+            }
+            
+            // Draw center line
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.stroke();
+        }
+        
+        // Update visualizer in real-time
+        function updateVisualizer(deck) {
+            const canvas = deck === 'a' ? waveformCanvasA : waveformCanvasB;
+            const ctx = canvas.getContext('2d');
+            const analyser = deck === 'a' ? analyserA : analyserB;
+            const color = deck === 'a' ? 'var(--deck-a)' : 'var(--deck-b)';
+            
+            // Create buffer array
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            
+            function draw() {
+                // Get animation frame ID
+                if (deck === 'a') {
+                    animationFrameA = requestAnimationFrame(() => draw());
+                } else {
+                    animationFrameB = requestAnimationFrame(() => draw());
+                }
+                
+                // Get frequency data
+                analyser.getByteFrequencyData(dataArray);
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw background
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw center line
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height / 2);
+                ctx.lineTo(canvas.width, canvas.height / 2);
+                ctx.stroke();
+                
+                // Draw frequency bars
+                const barWidth = canvas.width / bufferLength * 2.5;
+                const barGap = 1;
+                let x = 0;
+                
+                ctx.fillStyle = color;
+                for (let i = 0; i < bufferLength; i++) {
+                    const barHeight = (dataArray[i] / 255) * canvas.height * 0.8;
+                    const y = (canvas.height - barHeight) / 2;
+                    
+                    ctx.fillRect(x, y, barWidth, barHeight);
+                    x += barWidth + barGap;
+                }
+            }
+            
+            draw();
+        }
+        
+        // Initialize canvas sizes
+        function initCanvases() {
+            waveformCanvasA.width = waveformCanvasA.offsetWidth;
+            waveformCanvasA.height = waveformCanvasA.offsetHeight;
+            waveformCanvasB.width = waveformCanvasB.offsetWidth;
+            waveformCanvasB.height = waveformCanvasB.offsetHeight;
+            
+            // Draw empty waveforms
+            const ctxA = waveformCanvasA.getContext('2d');
+            const ctxB = waveformCanvasB.getContext('2d');
+            
+            // Clear canvases
+            ctxA.clearRect(0, 0, waveformCanvasA.width, waveformCanvasA.height);
+            ctxB.clearRect(0, 0, waveformCanvasB.width, waveformCanvasB.height);
+            
+            // Draw backgrounds
+            ctxA.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctxA.fillRect(0, 0, waveformCanvasA.width, waveformCanvasA.height);
+            ctxB.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctxB.fillRect(0, 0, waveformCanvasB.width, waveformCanvasB.height);
+            
+            // Draw center lines
+            ctxA.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctxA.beginPath();
+            ctxA.moveTo(0, waveformCanvasA.height / 2);
+            ctxA.lineTo(waveformCanvasA.width, waveformCanvasA.height / 2);
+            ctxA.stroke();
+            
+            ctxB.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctxB.beginPath();
+            ctxB.moveTo(0, waveformCanvasB.height / 2);
+            ctxB.lineTo(waveformCanvasB.width, waveformCanvasB.height / 2);
+            ctxB.stroke();
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', initCanvases);
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            initCanvases();
+            
+            // Sample URL placeholders
+            urlInputA.value = 'https://example.com/music/track1.mp3';
+            urlInputB.value = 'https://example.com/music/track2.mp3';
+        });
+    </script>
+</body>
+</html>
+                    <div class="url-input-group">
+                        <input type="text" id="url-a" class="url-input" placeholder="Paste audio URL here...">
+                    </div>
+                    <button id="load-a" class="load-button load-button-a">
+                        <i class="fas fa-download"></i> Load Track
+                    </button>
+                </div>
+                
+                <div class="url-input-container">
+                    <div class="url-input-header">
+                        <i class="fas fa-music deck-b-color"></i>
+                        <h3>Deck B Track URL</h3>
+                    </div>
+                    <div class="url-input-group">
+                        <input type="text" id="url-b" class="url-input" placeholder="Paste audio URL here...">
+                    </div>
+                    <button id="load-b" class="load-button load-button-b">
+                        <i class="fas fa-download"></i> Load Track
+                    </button>
+                </div>
+            </section>
+            
+            <section class="dj-decks">
+                <div class="deck deck-a">
+                    <div class="deck-header">
+                        <div class="deck-title">
+                            <i class="fas fa-compact-disc deck-a-color"></i>
+                            <h2 class="deck-a-color">DECK A</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="vinyl-container">
+                        <div id="vinyl-a" class="vinyl-disk">
+                            <div class="vinyl-reflection"></div>
+                        </div>
+                        <div id="arm-a" class="vinyl-arm"></div>
+                    </div>
+                    
+                    <div class="track-info-container">
+                        <div id="track-info-a" class="track-info">
+                            <p><strong>Status:</strong> No track loaded</p>
+                        </div>
+                        
+                        <div class="waveform-container">
+                            <canvas id="waveform-a" width="100%" height="100%"></canvas>
+                        </div>
+                        
+                        <div class="controls">
+                            <button id="play-a" class="control-button">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button id="pause-a" class="control-button">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <button id="stop-a" class="control-button">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <button id="loop-a" class="control-button">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="deck-controls">
+                            <div class="slider-group">
+                                <div class="slider-label">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span>Volume</span>
+                                </div>
+                                <div class="slider-container">
+                                    <input type="range" id="volume-a" class="slider" min="0" max="100" value="80">
+                                </div>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <div class="slider-label">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span>Speed</span>
+                                </div>
+                                <div class="slider-container">
+                                    <input type="range" id="speed-a" class="slider" min="50" max="150" value="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="deck deck-b">
+                    <div class="deck-header">
+                        <div class="deck-title">
+                            <i class="fas fa-compact-disc deck-b-color"></i>
+                            <h2 class="deck-b-color">DECK B</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="vinyl-container">
+                        <div id="vinyl-b" class="vinyl-disk">
+                            <div class="vinyl-reflection"></div>
+                        </div>
+                        <div id="arm-b" class="vinyl-arm"></div>
+                    </div>
+                    
+                    <div class="track-info-container">
+                        <div id="track-info-b" class="track-info">
+                            <p><strong>Status:</strong> No track loaded</p>
+                        </div>
+                        
+                        <div class="waveform-container">
+                            <canvas id="waveform-b" width="100%" height="100%"></canvas>
+                        </div>
+                        
+                        <div class="controls">
+                            <button id="play-b" class="control-button">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button id="pause-b" class="control-button">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <button id="stop-b" class="control-button">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <button id="loop-b" class="control-button">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="deck-controls">
+                            <div class="slider-group">
+                                <div class="slider-label">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span>Volume</span>
+                                </div>
+                                <div class="slider-container">
+                                    <input type="range" id="volume-b" class="slider" min="0" max="100" value="80">
+                                </div>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <div class="slider-label">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span>Speed</span>
+                                </div>
+                                <div class="slider-container">
+                                    <input type="range" id="speed-b" class="slider" min="50" max="150" value="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="mixer-section">
+                <div class="mixer-header">
+                    <i class="fas fa-sliders-h"></i>
+                    <h2>MIXER CONSOLE</h2>
+                </div>
+                
+                <div class="crossfade-container">
+                    <div class="crossfade-label">
+                        <span>DECK A</span>
+                        <span>DECK B</span>
+                    </div>
+                    <div class="crossfade-slider-container">
+                        <input type="range" id="crossfader" class="crossfade-slider" min="0" max="100" value="50">
+                    </div>
+                </div>
+                
+                <div class="effects-section">
+                    <button id="effect-reverb" class="effect-button">
+                        <i class="fas fa-water"></i> Reverb
+                    </button>
+                    <button id="effect-echo" class="effect-button">
+                        <i class="fas fa-wave-square"></i> Echo
+                    </button>
+                    <button id="effect-lowpass" class="effect-button">
+                        <i class="fas fa-filter"></i> Low Pass
+                    </button>
+                    <button id="effect-highpass" class="effect-button">
+                        <i class="fas fa-filter fa-flip-vertical"></i> High Pass
+                    </button>
+                    <button id="effect-flanger" class="effect-button">
+                        <i class="fas fa-dharmachakra"></i> Flanger
+                    </button>
+                    <button id="effect-distortion" class="effect-button">
+                        <i class="fas fa-bolt"></i> Distortion
+                    </button>
+                </div>
+                
+                <button id="reset-effects" class="reset-button">
+                    <i class="fas fa-undo"></i> Reset All Effects
+                </button>
+                
+                <div class="equalizer-section">
+                    <div class="eq-control">
+                        <div class="eq-slider">
+                            <input type="range" id="eq-low" min="0" max="100" value="50" orient="vertical">
+                        </div>
+                        <span class="eq-label">LOW</span>
+                    </div>
+                    <div class="eq-control">
+                        <div class="eq-slider">
+                            <input type="range" id="eq-mid-low" min="0" max="100" value="50" orient="vertical">
+                        </div>
+                        <span class="eq-label">MID-L</span>
+                    </div>
+                    <div class="eq-control">
+                        <div class="eq-slider">
+                            <input type="range" id="eq-mid" min="0" max="100" value="50" orient="vertical">
+                        </div>
+                        <span class="eq-label">MID</span>
+                    </div>
+                    <div class="eq-control">
+                        <div class="eq-slider">
+                            <input type="range" id="eq-mid-high" min="0" max="100" value="50" orient="vertical">
+                        </div>
+                        <span class="eq-label">MID-H</span>
+                    </div>
+                    <div class="eq-control">
+                        <div class="eq-slider">
+                            <input type="range" id="eq-high" min="0" max="100" value="50" orient="vertical">
+                        </div>
+                        <span class="eq-label">HIGH</span>
+                    </div>
